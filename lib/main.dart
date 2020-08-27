@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopapp/screens/add_product.dart';
 import './screens/my_product.dart';
 import './providers/auth_provider.dart';
+import './providers/product_provider.dart';
 import './screens/home.dart';
 import './screens/login.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: AuthProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, ProductProvider>(
+          create: null,
+          update: (ctx, auth, product) => ProductProvider(token: auth.token),
+        )
       ],
       child: Consumer<AuthProvider>(
         builder: (ctx, auth, _) => MaterialApp(

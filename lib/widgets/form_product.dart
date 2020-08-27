@@ -31,6 +31,7 @@ class _FormProductState extends State<FormProduct> {
   final _formKey = GlobalKey<FormState>();
   double _previewImageHeight = 0;
   PickedFile imageFile;
+  bool _isLoading = false;
 
   /// Mengambil Image
   Future pilihImage(ImageSource source) async {
@@ -43,95 +44,154 @@ class _FormProductState extends State<FormProduct> {
     }
   }
 
+  /// Untuk menyimpan hasil add atau edit
+  Future<void> submit(BuildContext context) async {
+    if (widget.imagePath != null) {
+      if (_formKey.currentState.validate()) {
+        _formKey.currentState.save();
+
+        setState(() {
+          _isLoading = true;
+        });
+
+        try {
+          await widget.functionOnSubmit(
+            widget.name,
+            widget.price,
+            widget.description,
+            widget.imagePath,
+          );
+          _alert(context, 'Peroduk berhasil disimpan.');
+        } catch (error) {
+          _alert(context, error);
+        }
+
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      _alert(context, 'Gambar tidak boleh kosong');
+    }
+  }
+
+  /// Widget untuk alert kesalahan error atau apapun itu.
+  void _alert(BuildContext context, String message) {
+    Scaffold.of(context).hideCurrentSnackBar();
+    Scaffold.of(context).showSnackBar(
+      SnackBar(content: Text(message.toString())),
+    );
+  }
+
+  /// Validasi inputan
+  String validateInput(String value, String namaInput) {
+    if (value.isEmpty) {
+      return '$namaInput tidak boleh kosong.';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                initialValue: widget.name,
-                decoration: InputDecoration(
-                  labelText: 'Nama Produk',
-                ),
-                onSaved: (value) {
-                  widget.name = value;
-                },
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                initialValue: widget.price,
-                decoration: InputDecoration(
-                  labelText: 'Harga (Rp)',
-                ),
-                keyboardType: TextInputType.number,
-                onSaved: (value) {
-                  widget.price = value;
-                },
-              ),
-              SizedBox(height: 10),
-              TextFormField(
-                initialValue: widget.description,
-                decoration: InputDecoration(
-                  labelText: 'Deskripsi Produk',
-                ),
-                keyboardType: TextInputType.multiline,
-                onSaved: (value) {
-                  widget.description = value;
-                },
-              ),
-              SizedBox(height: 10),
-              Container(
+    return _isLoading
+        ? Center(child: CircularProgressIndicator())
+        : Container(
+            padding: EdgeInsets.all(10),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    _previewImageHeight > 0
-                        ? Container(
-                            height: _previewImageHeight,
-                            width: double.infinity,
-                            child: Image.file(File(imageFile.path),
-                                fit: BoxFit.cover),
-                          )
-                        : Container(),
-                    Center(
-                      child: Container(
-                        padding: EdgeInsets.only(top: 10),
-                        child: FlatButton(
-                          color: Colors.yellow,
-                          child: Icon(Icons.cloud_upload),
-                          onPressed: () {
-                            pilihImage(ImageSource.gallery);
-                          },
-                        ),
+                    TextFormField(
+                      initialValue: widget.name,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        labelText: 'Nama Produk',
                       ),
-                    )
+                      onSaved: (value) {
+                        widget.name = value;
+                      },
+                      validator: (value) => validateInput(value, 'Nama Produk'),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      initialValue: widget.price,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        labelText: 'Harga (Rp)',
+                      ),
+                      keyboardType: TextInputType.number,
+                      onSaved: (value) {
+                        widget.price = value;
+                      },
+                      validator: (value) => validateInput(value, 'Harga'),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      initialValue: widget.description,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        labelText: 'Deskripsi Produk',
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      onSaved: (value) {
+                        widget.description = value;
+                      },
+                      validator: (value) =>
+                          validateInput(value, 'Deskripsi Produk'),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          _previewImageHeight > 0
+                              ? Container(
+                                  height: _previewImageHeight,
+                                  width: double.infinity,
+                                  child: Image.file(File(imageFile.path),
+                                      fit: BoxFit.cover),
+                                )
+                              : Container(),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.only(top: 10),
+                            child: FlatButton(
+                              color: Colors.transparent,
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.filter_center_focus),
+                                    SizedBox(width: 10),
+                                    Text('Pilih Gambar')
+                                  ],
+                                ),
+                              ),
+                              onPressed: () {
+                                pilihImage(ImageSource.gallery);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      child: FlatButton(
+                        onPressed: () {
+                          submit(context);
+                        },
+                        child: Text('Simpan',
+                            style: TextStyle(color: Colors.white)),
+                        color: Colors.teal,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(height: 10),
-              Center(
-                child: Container(
-                  child: FlatButton(
-                    onPressed: () {
-                      widget.functionOnSubmit(
-                        widget.name,
-                        widget.price,
-                        widget.description,
-                        widget.imagePath,
-                      );
-                    },
-                    child:
-                        Text('Simpan', style: TextStyle(color: Colors.white)),
-                    color: Colors.teal,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
+
 }
