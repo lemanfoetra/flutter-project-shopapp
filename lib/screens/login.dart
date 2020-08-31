@@ -55,12 +55,15 @@ class _LoginState extends State<Login> {
   Widget _widgetSubmitButton(BuildContext context) {
     return _isLoading
         ? CircularProgressIndicator()
-        : FlatButton(
-            onPressed: () {
-              submitLogin(context);
-            },
-            child: Text('Login', style: TextStyle(color: Colors.white)),
-            color: Colors.teal,
+        : Container(
+            width: double.infinity,
+            child: FlatButton(
+              onPressed: () {
+                submitLogin(context);
+              },
+              child: Text('Login', style: TextStyle(color: Colors.white)),
+              color: Colors.teal,
+            ),
           );
   }
 

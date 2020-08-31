@@ -45,7 +45,7 @@ class AuthProvider with ChangeNotifier {
 
   /// Untuk pengecekan apakan sudah login atau tidak
   bool get isAuth {
-    if (token != null) {
+    if (token != null && token != '') {
       return true;
     }
     return false;
@@ -54,5 +54,11 @@ class AuthProvider with ChangeNotifier {
   /// Untuk mengambil token
   String get token {
     return _token;
+  }
+
+
+  /// Hapus kode token
+  void removeToken(){
+    _token = null;
   }
 }

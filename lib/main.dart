@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthProvider, ProductProvider>(
           create: null,
           update: (ctx, auth, product) => ProductProvider(token: auth.token),
-        )
+        ),
       ],
       child: Consumer<AuthProvider>(
         builder: (ctx, auth, _) => MaterialApp(
