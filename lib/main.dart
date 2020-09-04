@@ -3,7 +3,7 @@ import 'package:shopapp/screens/add_product.dart';
 import './screens/my_product.dart';
 import './providers/auth_provider.dart';
 import './providers/product_provider.dart';
-import './screens/home.dart';
+import 'screens/home.dart';
 import './screens/login.dart';
 import 'package:provider/provider.dart';
 

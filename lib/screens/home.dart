@@ -4,6 +4,7 @@ import 'package:shopapp/widgets/product_item.dart';
 import '../widgets/drawer.dart';
 import '../providers/product_provider.dart';
 import '../models/product.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeScreens extends StatefulWidget {
   @override
@@ -11,6 +12,22 @@ class HomeScreens extends StatefulWidget {
 }
 
 class _HomeScreensState extends State<HomeScreens> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  /// refresh halaman
+  Future<void> _refreshHalaman(BuildContext context) async {
+    await Provider.of<ProductProvider>(context).loadListProductFromServer();
+    _refreshController.refreshCompleted();
+  }
+
+  /// Load More data
+  Future<void> _onLoadMore() async {
+    await Provider.of<ProductProvider>(context).loadNextListProductFromServer();
+    //if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +44,16 @@ class _HomeScreensState extends State<HomeScreens> {
           } else if (snapshot.error != null) {
             return Text('error ${snapshot.error}');
           } else {
-            return Consumer<ProductProvider>(
-              builder: (ctx, productProvider, chidl) {
-                return Container(
-                  child: GridView.builder(
+            /// hanya berjalan pas refresh saja
+            return SmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              enablePullUp: true,
+              onRefresh: () => _refreshHalaman(context),
+              onLoading: () => _onLoadMore(),
+              child: Consumer<ProductProvider>(
+                builder: (ctx, productProvider, chidl) {
+                  return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 1,
@@ -47,9 +70,9 @@ class _HomeScreensState extends State<HomeScreens> {
                         imageUrl: imageUrl,
                       );
                     },
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           }
         },
