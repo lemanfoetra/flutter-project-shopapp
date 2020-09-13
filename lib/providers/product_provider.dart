@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopapp/models/product.dart';
 import 'dart:convert';
-import '../providers/auth_provider.dart';
 
 class ProductProvider with ChangeNotifier {
   String token;
@@ -62,11 +61,6 @@ class ProductProvider with ChangeNotifier {
         }
       }
 
-      // set url to next product
-      if(responseData['links']['next'] != null && responseData['links']['next'] != 'null'){
-        _nextUrlLoadProduct = responseData['links']['next'];
-      }
-
       List<Product> newData = [];
       if (responseData['data'] != null) {
         var _listHasil = responseData['data'] as List<dynamic>;
@@ -80,6 +74,51 @@ class ProductProvider with ChangeNotifier {
           ));
         }
         _listProduct = newData;
+        this.setUrlToNextLoadListProduct(
+          _urlLoadProduct,
+          responseData['links']['next'],
+        );
+      }
+    } catch (error) {
+      throw "Gagal Menyambung ke server";
+    }
+    notifyListeners();
+  }
+
+  /// Loading old data
+  Future<void> loadNextListProductFromServer() async {
+    try {
+      if (_nextUrlLoadProduct != '' && _nextUrlLoadProduct != null) {
+        final response = await http.get(_nextUrlLoadProduct, headers: {
+          'Accept': 'application/json',
+          'Authorization': "Bearer $token",
+        });
+
+        final responseData = json.decode(response.body) as Map<String, dynamic>;
+
+        // cek token
+        if (responseData != null) {
+          if (responseData['status'] == 'Token is Invalid') {
+            throw "Token is Invalid";
+          }
+        }
+
+        List<Product> newData = [];
+        if (responseData['data'] != null) {
+          var _listHasil = responseData['data'] as List<dynamic>;
+
+          for (int i = 0; i < _listHasil.length; i++) {
+            newData.add(Product(
+              name: _listHasil[i]['name'],
+              price: _listHasil[i]['price'].toDouble(),
+              description: _listHasil[i]['description'],
+              image: _listHasil[i]['img_url'],
+            ));
+          }
+          _listProduct.addAll(newData);
+          this.setUrlToNextLoadListProduct(
+              _nextUrlLoadProduct, responseData['links']['next']);
+        }
       }
     } catch (error) {
       throw "Gagal Menyambung ke server";
@@ -90,55 +129,11 @@ class ProductProvider with ChangeNotifier {
   /// set url to load next list of product
   void setUrlToNextLoadListProduct(defaultUrl, nextUrl) {
     if (nextUrl == null || nextUrl == 'null') {
-      _nextUrlLoadProduct = defaultUrl;
+      _nextUrlLoadProduct = '';
+    } else if (_nextUrlLoadProduct == nextUrl) {
+      _nextUrlLoadProduct = '';
     }
-    print(nextUrl);
     _nextUrlLoadProduct = nextUrl;
-  }
-
-  /// Loading old data
-  Future<void> loadNextListProductFromServer() async {
-    //try {
-      final response = await http.get(_nextUrlLoadProduct, headers: {
-        'Accept': 'application/json',
-        'Authorization': "Bearer $token",
-      });
-
-      final responseData = json.decode(response.body) as Map<String, dynamic>;
-
-      // cek token
-      if (responseData != null) {
-        if (responseData['status'] == 'Token is Invalid') {
-          throw "Token is Invalid";
-        }
-      }
-
-      if(responseData['links']['next'] != null && responseData['links']['next'] != 'null'){
-        _nextUrlLoadProduct = responseData['links']['next'];
-      }
-
-
-      List<Product> newData = [];
-      if (responseData['data'] != null) {
-        var _listHasil = responseData['data'] as List<dynamic>;
-
-        for (int i = 0; i < _listHasil.length; i++) {
-          newData.add(Product(
-            name: _listHasil[i]['name'],
-            price: _listHasil[i]['price'].toDouble(),
-            description: _listHasil[i]['description'],
-            image: _listHasil[i]['img_url'],
-          ));
-        }
-        print(newData);
-        _listProduct.addAll(newData);
-
-        print(_listProduct);
-      }
-    // } catch (error) {
-    //   throw "Gagal Menyambung ke server";
-    // }
-    notifyListeners();
   }
 
   void bersihkanItem() {

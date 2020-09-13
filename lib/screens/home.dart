@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopapp/widgets/product_item.dart';
@@ -12,20 +13,43 @@ class HomeScreens extends StatefulWidget {
 }
 
 class _HomeScreensState extends State<HomeScreens> {
+  bool _isFirstLoaded = true;
+  List<Product> listProduct = [];
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-  /// refresh halaman
-  Future<void> _refreshHalaman(BuildContext context) async {
-    await Provider.of<ProductProvider>(context).loadListProductFromServer();
+  /// Untuk laod data baru dan refresh halaman
+  Future<void> _refreshHalaman() async {
+    var productProvider = Provider.of<ProductProvider>(context, listen: false);
+    await productProvider.loadListProductFromServer();
+    setState(() {
+      listProduct = productProvider.listProducts;
+      _isFirstLoaded = false;
+    });
     _refreshController.refreshCompleted();
+    _refreshController.resetNoData();
   }
 
   /// Load More data
   Future<void> _onLoadMore() async {
-    await Provider.of<ProductProvider>(context).loadNextListProductFromServer();
-    //if (mounted) setState(() {});
-    _refreshController.loadComplete();
+    var productProvider = Provider.of<ProductProvider>(context, listen: false);
+    await productProvider.loadNextListProductFromServer();
+    if (listProduct.length < productProvider.listProducts.length) {
+      setState(() {
+        listProduct = productProvider.listProducts;
+      });
+      _refreshController.loadComplete();
+    } else {
+      _refreshController.loadNoData();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isFirstLoaded) {
+      _refreshHalaman();
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -35,48 +59,52 @@ class _HomeScreensState extends State<HomeScreens> {
         title: Text('Shopper'),
       ),
       drawer: AppDrawer(),
-      body: FutureBuilder(
-        future: Provider.of<ProductProvider>(context, listen: false)
-            .loadListProductFromServer(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.error != null) {
-            return Text('error ${snapshot.error}');
-          } else {
-            /// hanya berjalan pas refresh saja
-            return SmartRefresher(
+      body: _isFirstLoaded
+          ? Center(child: CircularProgressIndicator())
+          : SmartRefresher(
               controller: _refreshController,
               enablePullDown: true,
               enablePullUp: true,
-              onRefresh: () => _refreshHalaman(context),
+              onRefresh: () => _refreshHalaman(),
               onLoading: () => _onLoadMore(),
-              child: Consumer<ProductProvider>(
-                builder: (ctx, productProvider, chidl) {
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
-                    ),
-                    itemCount: productProvider.listProducts.length,
-                    itemBuilder: (context, index) {
-                      String imageUrl =
-                          productProvider.listProducts[index].image;
-                      return ProductItem(
-                        name: productProvider.listProducts[index].name,
-                        price: productProvider.listProducts[index].price,
-                        description:
-                            productProvider.listProducts[index].description,
-                        imageUrl: imageUrl,
-                      );
-                    },
+              header: WaterDropHeader(),
+              footer: CustomFooter(
+                builder: (BuildContext context, LoadStatus mode) {
+                  Widget body;
+                  if (mode == LoadStatus.idle) {
+                    body = Text("pull up load");
+                  } else if (mode == LoadStatus.loading) {
+                    body = CupertinoActivityIndicator();
+                  } else if (mode == LoadStatus.failed) {
+                    body = Text("Load Failed!Click retry!");
+                  } else if (mode == LoadStatus.canLoading) {
+                    body = Text("release to load more");
+                  } else {
+                    body = Text("No more Data");
+                  }
+                  return Container(
+                    height: 55.0,
+                    child: Center(child: body),
                   );
                 },
               ),
-            );
-          }
-        },
-      ),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                ),
+                itemCount: listProduct.length,
+                itemBuilder: (context, index) {
+                  String imageUrl = listProduct[index].image;
+                  return ProductItem(
+                    name: listProduct[index].name,
+                    price: listProduct[index].price,
+                    description: listProduct[index].description,
+                    imageUrl: imageUrl,
+                  );
+                },
+              ),
+            ),
     );
   }
 }
