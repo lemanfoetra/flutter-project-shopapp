@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/form_product.dart';
-import '../providers/product_provider.dart';
+import '../providers/my_product_provider.dart';
 import 'package:provider/provider.dart';
 
 class AddProduct extends StatelessWidget {
@@ -14,7 +14,7 @@ class AddProduct extends StatelessWidget {
         builder: (builderContext) => FormProduct(
           functionOnSubmit: (name, price, description, image) async {
             try {
-              await Provider.of<ProductProvider>(context)
+              await Provider.of<MyProductProvider>(context)
                   .submitProduct(name, price, description, image);
             } catch (error) {
               throw error;

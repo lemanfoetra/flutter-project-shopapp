@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './providers/my_product_provider.dart';
 import './screens/add_product.dart';
 import './screens/my_product.dart';
 import './providers/auth_provider.dart';
@@ -20,6 +21,11 @@ class MyApp extends StatelessWidget {
           create: null,
           update: (ctx, auth, product) => ProductProvider(token: auth.token),
         ),
+        ChangeNotifierProxyProvider<AuthProvider, MyProductProvider>(
+          create: null,
+          update: (ctx, auth, myProduct) =>
+              MyProductProvider(token: auth.token),
+        )
       ],
       child: Consumer<AuthProvider>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -29,6 +35,7 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
+            //'/': (ctx) => MyProduct(),
             '/': (ctx) => auth.isAuth ? HomeScreens() : Login(),
             MyProduct.routeName: (ctx) => MyProduct(),
             AddProduct.routeName: (ctx) => AddProduct(),
