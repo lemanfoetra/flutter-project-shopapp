@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 class Product {
 
+  final String   id;
   final String name;
   final double price;
   final String description;
@@ -9,6 +10,7 @@ class Product {
 
 
   Product({
+    @required this.id,
     @required this.name,
     @required this.price,
     @required this.description,

@@ -69,6 +69,7 @@ class MyProductProvider with ChangeNotifier {
           for (var i = 0; i < data.length; i++) {
             newData.add(
               Product(
+                id: data[i]['id'].toString(),
                 name: data[i]['name'],
                 price: data[i]['price'].toDouble(),
                 description: data[i]['description'],
@@ -112,6 +113,7 @@ class MyProductProvider with ChangeNotifier {
             for (var i = 0; i < data.length; i++) {
               newData.add(
                 Product(
+                  id: data[i]['id'].toString(),
                   name: data[i]['name'],
                   price: data[i]['price'].toDouble(),
                   description: data[i]['description'],
@@ -122,7 +124,8 @@ class MyProductProvider with ChangeNotifier {
           }
 
           /// set next url
-          _urlLoadNext = setNextUrl(_urlLoadNext, dataResponse['next_page_url']);
+          _urlLoadNext =
+              setNextUrl(_urlLoadNext, dataResponse['next_page_url']);
         }
       }
       _myProduct.addAll(newData);
@@ -130,12 +133,35 @@ class MyProductProvider with ChangeNotifier {
     }
   }
 
+
+
+  /// Hapus product
+  Future<void> removeProduct(String id) async {
+    String _url = 'http://shopapp.ardynsulaeman.com/public/api/product/$id';
+    final response = await http.delete(_url, headers: {
+      'Accept': 'application/json',
+      'Authorization': "Bearer $token"
+    });
+
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+
+    // hapus list product di lokal
+    if(responseData['status'] == 'success'){
+      print(myProduct.length);
+      _myProduct.removeWhere((product)=> product.id == id );
+      print(myProduct.length);
+    }
+    notifyListeners();
+  }
+
+
+
   /// set next Url
   String setNextUrl(String currentUrl, String nextUrl) {
-    if(nextUrl == null){
+    if (nextUrl == null) {
       return null;
     }
-    if(currentUrl == nextUrl){
+    if (currentUrl == nextUrl) {
       return null;
     }
     return nextUrl;

@@ -40,6 +40,7 @@ class ProductProvider with ChangeNotifier {
 
         for (int i = 0; i < _listHasil.length; i++) {
           newData.add(Product(
+            id: _listHasil[i]['id'].toString(),
             name: _listHasil[i]['name'],
             price: _listHasil[i]['price'].toDouble(),
             description: _listHasil[i]['description'],
@@ -82,6 +83,7 @@ class ProductProvider with ChangeNotifier {
 
           for (int i = 0; i < _listHasil.length; i++) {
             newData.add(Product(
+              id: _listHasil[i]['id'].toString(),
               name: _listHasil[i]['name'],
               price: _listHasil[i]['price'].toDouble(),
               description: _listHasil[i]['description'],

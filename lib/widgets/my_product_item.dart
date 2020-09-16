@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyProductItem extends StatelessWidget {
+  final String id;
   final String image;
   final String title;
   final double price;
+  final Function remove;
+  final Function edit;
 
   MyProductItem({
+    @required this.id,
     @required this.image,
     @required this.title,
     @required this.price,
+    @required this.remove,
+    @required this.edit,
   });
 
   @override
@@ -43,8 +49,12 @@ class MyProductItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 PopupMenuButton(
+                  onSelected: (jenis) {
+                    if (jenis == 'remove') remove(id);
+                    if (jenis == 'edit') edit(id);
+                  },
                   child: Padding(
-                    padding: EdgeInsets.only(top: 8, right: 8),
+                    padding: EdgeInsets.all(10),
                     child: Icon(
                       FontAwesomeIcons.ellipsisV,
                       size: 15,
@@ -52,8 +62,14 @@ class MyProductItem extends StatelessWidget {
                     ),
                   ),
                   itemBuilder: (context) => [
-                    PopupMenuItem(child: Text('Edit')),
-                    PopupMenuItem(child: Text('Hapus')),
+                    PopupMenuItem(
+                      child: Text('Edit'),
+                      value: 'edit',
+                    ),
+                    PopupMenuItem(
+                      child: Text('Hapus'),
+                      value: 'remove',
+                    ),
                   ],
                 )
               ],

@@ -56,6 +56,24 @@ class _MyProductState extends State<MyProduct> {
     }
   }
 
+
+  /// remove product
+  Future<void> _removeProduct(String id) async {
+    var myProduct = Provider.of<MyProductProvider>(context, listen: false);
+    await myProduct.removeProduct(id);
+    print('1 ${_myProduct.length}');
+    print('2 ${myProduct.myProduct.length}');
+    setState(() {
+      _myProduct = myProduct.myProduct;
+    });
+  }
+
+
+
+  void _editProduct(String id){
+    print("edit $id");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,9 +129,12 @@ class _MyProductState extends State<MyProduct> {
                 itemCount: _myProduct.length,
                 itemBuilder: (context, index) {
                   return MyProductItem(
+                    id: _myProduct[index].id.toString(),
                     image: _myProduct[index].image,
                     price: _myProduct[index].price,
                     title: _myProduct[index].name,
+                    remove: _removeProduct,
+                    edit: _editProduct,
                   );
                 },
               ),

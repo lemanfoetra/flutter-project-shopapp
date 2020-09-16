@@ -90,8 +90,8 @@ class _HomeScreensState extends State<HomeScreens> {
               ),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.7,
                 ),
                 itemCount: listProduct.length,
                 itemBuilder: (context, index) {

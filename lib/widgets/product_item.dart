@@ -29,24 +29,34 @@ class ProductItem extends StatelessWidget {
               child: FadeInImage(
                 image: NetworkImage(imageUrl),
                 placeholder: AssetImage('assets/images/loading.gif'),
+                fit: BoxFit.cover,
               ),
             ),
             footer: Container(
-              padding: EdgeInsets.all(5),
-              color: Colors.black45,
+              padding: EdgeInsets.only(top: 5, right: 3, left: 3, bottom: 8),
+              color: Colors.white,
               child: Column(
                 children: <Widget>[
-                  Text(name, style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold ),),
-                  SizedBox(height: 3),
-                  Text("Rp $price", style: TextStyle(color: Colors.white),),
+                  Container(
+                    child: Text(
+                      name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    padding: EdgeInsets.only(bottom: 5),
+                  ),
+                  Container(
+                    child: Text(
+                      "Rp $price",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
-            // footer: GridTileBar(
-            //   backgroundColor: Colors.black26,
-            //   title: Text(name),
-            //   subtitle: Text("Rp $price"),
-            // ),
           ),
         ),
       ),
