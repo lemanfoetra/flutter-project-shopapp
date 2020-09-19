@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './screens/edit_product.dart';
 import './providers/my_product_provider.dart';
 import './screens/add_product.dart';
 import './screens/my_product.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
             '/': (ctx) => auth.isAuth ? HomeScreens() : Login(),
             MyProduct.routeName: (ctx) => MyProduct(),
             AddProduct.routeName: (ctx) => AddProduct(),
+            EditProduct.routeName : (ctx) => EditProduct(),
           },
         ),
       ),

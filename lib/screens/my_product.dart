@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shopapp/models/product.dart';
+import 'package:shopapp/screens/edit_product.dart';
 import '../widgets/my_product_item.dart';
 import '../widgets/drawer.dart';
 import '../widgets/form_product.dart';
@@ -71,7 +72,7 @@ class _MyProductState extends State<MyProduct> {
 
 
   void _editProduct(String id){
-    print("edit $id");
+    Navigator.of(context).pushNamed(EditProduct.routeName, arguments: id );
   }
 
   @override

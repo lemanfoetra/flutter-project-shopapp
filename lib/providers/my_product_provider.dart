@@ -44,6 +44,45 @@ class MyProductProvider with ChangeNotifier {
     }
   }
 
+  /// Function untuk submit Edit Product
+  Future<void> submitEditProduct(
+    String id,
+    String name,
+    String price,
+    String description,
+    String image,
+  ) async {
+    try {
+      final url = Uri.parse(
+          'http://shopapp.ardynsulaeman.com/public/api/product/edit/' + id);
+      Map<String, dynamic> body = {
+        'name': name,
+        'price': price,
+        'description': description
+      };
+
+      final response = http.MultipartRequest('POST', url);
+      response.headers['Accept'] = 'application/json';
+      response.headers['Authorization'] = "Bearer $token";
+      response.fields['name'] = name;
+      response.fields['price'] = price;
+      response.fields['description'] = description;
+
+      if (image != null) {
+        response.files.add(await http.MultipartFile.fromPath('image', image));
+      }
+      final result = await response.send();
+
+      print(result.statusCode);
+      if (result.statusCode != 200) {
+        throw 'Gagal mengupdate.';
+      }
+
+    } catch (error) {
+      throw error.toString();
+    }
+  }
+
   /// load my product
   Future<void> load() async {
     final response = await http.get(_urlLoad, headers: {
@@ -133,8 +172,6 @@ class MyProductProvider with ChangeNotifier {
     }
   }
 
-
-
   /// Hapus product
   Future<void> removeProduct(String id) async {
     String _url = 'http://shopapp.ardynsulaeman.com/public/api/product/$id';
@@ -146,15 +183,16 @@ class MyProductProvider with ChangeNotifier {
     final responseData = json.decode(response.body) as Map<String, dynamic>;
 
     // hapus list product di lokal
-    if(responseData['status'] == 'success'){
-      print(myProduct.length);
-      _myProduct.removeWhere((product)=> product.id == id );
-      print(myProduct.length);
+    if (responseData['status'] == 'success') {
+      _myProduct.removeWhere((product) => product.id == id);
     }
     notifyListeners();
   }
 
-
+  /// get data Product
+  Product getDataProduct(String id) {
+    return myProduct.firstWhere((product) => product.id == id);
+  }
 
   /// set next Url
   String setNextUrl(String currentUrl, String nextUrl) {

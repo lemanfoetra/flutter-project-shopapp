@@ -4,14 +4,16 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class FormProduct extends StatefulWidget {
-  final Function functionOnSubmit;
+  Function functionOnSubmit;
+  String id;
   String name;
   String price;
   String description;
   String imagePath;
+  String imageUrl;
 
   /// productId khusus untuk updata product
-  final String productId;
+  String productId;
 
   FormProduct({
     this.functionOnSubmit,
@@ -20,6 +22,7 @@ class FormProduct extends StatefulWidget {
     this.price,
     this.description,
     this.imagePath,
+    this.imageUrl,
   });
 
   @override
@@ -46,32 +49,37 @@ class _FormProductState extends State<FormProduct> {
 
   /// Untuk menyimpan hasil add atau edit
   Future<void> submit(BuildContext context) async {
-    if (widget.imagePath != null) {
-      if (_formKey.currentState.validate()) {
-        _formKey.currentState.save();
 
-        setState(() {
-          _isLoading = true;
-        });
-
-        try {
-          await widget.functionOnSubmit(
-            widget.name,
-            widget.price,
-            widget.description,
-            widget.imagePath,
-          );
-          _alert(context, 'Peroduk berhasil disimpan.');
-        } catch (error) {
-          _alert(context, error);
-        }
-
-        setState(() {
-          _isLoading = false;
-        });
+    // if null = add new , if not null = edit
+    if (widget.productId == null) {
+      if (widget.imagePath != null) {
+        _alert(context, 'Gambar tidak boleh kosong');
+        return;
       }
-    } else {
-      _alert(context, 'Gambar tidak boleh kosong');
+    }
+
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        await widget.functionOnSubmit(
+          widget.name,
+          widget.price,
+          widget.description,
+          widget.imagePath,
+        );
+        _alert(context, 'Peroduk berhasil disimpan.');
+      } catch (error) {
+        _alert(context, error);
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -193,5 +201,4 @@ class _FormProductState extends State<FormProduct> {
             ),
           );
   }
-
 }
