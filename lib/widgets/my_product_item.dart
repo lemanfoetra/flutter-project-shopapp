@@ -8,6 +8,7 @@ class MyProductItem extends StatelessWidget {
   final double price;
   final Function remove;
   final Function edit;
+  final Function navigatorOverview;
 
   MyProductItem({
     @required this.id,
@@ -16,6 +17,7 @@ class MyProductItem extends StatelessWidget {
     @required this.price,
     @required this.remove,
     @required this.edit,
+    @required this.navigatorOverview,
   });
 
   @override
@@ -24,80 +26,83 @@ class MyProductItem extends StatelessWidget {
       padding: EdgeInsets.all(3),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
-        child: GridTile(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(
-                width: 0.5,
-                color: Colors.grey,
+        child: InkWell(
+          onTap: () => navigatorOverview(id),
+          child: GridTile(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                  width: 0.5,
+                  color: Colors.grey,
+                ),
+              ),
+              child: FadeInImage(
+                image: NetworkImage(image),
+                placeholder: AssetImage('assets/images/picture.png'),
+                fit: BoxFit.cover,
               ),
             ),
-            child: FadeInImage(
-              image: NetworkImage(image),
-              placeholder: AssetImage('assets/images/picture.png'),
-              fit: BoxFit.cover,
+            header: Container(
+              // padding: EdgeInsets.only(
+              //   top: 7,
+              //   right: 3,
+              // ),
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  PopupMenuButton(
+                    onSelected: (jenis) {
+                      if (jenis == 'remove') remove(id);
+                      if (jenis == 'edit') edit(id);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Icon(
+                        FontAwesomeIcons.ellipsisV,
+                        size: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Text('Edit'),
+                        value: 'edit',
+                      ),
+                      PopupMenuItem(
+                        child: Text('Hapus'),
+                        value: 'remove',
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-          header: Container(
-            // padding: EdgeInsets.only(
-            //   top: 7,
-            //   right: 3,
-            // ),
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                PopupMenuButton(
-                  onSelected: (jenis) {
-                    if (jenis == 'remove') remove(id);
-                    if (jenis == 'edit') edit(id);
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Icon(
-                      FontAwesomeIcons.ellipsisV,
-                      size: 15,
-                      color: Colors.white,
+            footer: Container(
+              padding: EdgeInsets.only(top: 5, right: 3, left: 3, bottom: 8),
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    child: Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12),
                     ),
+                    padding: EdgeInsets.only(bottom: 5),
                   ),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Text('Edit'),
-                      value: 'edit',
+                  Container(
+                    child: Text(
+                      "Rp $price",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
-                    PopupMenuItem(
-                      child: Text('Hapus'),
-                      value: 'remove',
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-          footer: Container(
-            padding: EdgeInsets.only(top: 5, right: 3, left: 3, bottom: 8),
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  padding: EdgeInsets.only(bottom: 5),
-                ),
-                Container(
-                  child: Text(
-                    "Rp $price",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

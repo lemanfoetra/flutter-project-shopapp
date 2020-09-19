@@ -118,8 +118,8 @@ class ProductProvider with ChangeNotifier {
 
 
 
-
-  Future<void> myProduct() async {
-
+  /// Mencari produk berdasarkan id
+  Product findById(String id){
+    return _listProduct.firstWhere((product) => product.id == id);
   }
 }

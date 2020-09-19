@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopapp/widgets/product_item.dart';
+import '../screens/overview_screen.dart';
+import '../widgets/product_item.dart';
 import '../widgets/drawer.dart';
 import '../providers/product_provider.dart';
 import '../models/product.dart';
@@ -44,6 +45,12 @@ class _HomeScreensState extends State<HomeScreens> {
     }
   }
 
+  /// Untuk membuka halaman detail product
+  void navigationToOverview(String id) {
+    Navigator.of(context).pushNamed(OverViewScreen.routeName, arguments: id);
+  }
+
+  /// Auto load on page opened
   @override
   void didChangeDependencies() {
     if (_isFirstLoaded) {
@@ -81,7 +88,7 @@ class _HomeScreensState extends State<HomeScreens> {
                     body = Text("release to load more");
                   } else {
                     body = Text("No more Data");
-                  } 
+                  }
                   return Container(
                     height: 55.0,
                     child: Center(child: body),
@@ -97,10 +104,12 @@ class _HomeScreensState extends State<HomeScreens> {
                 itemBuilder: (context, index) {
                   String imageUrl = listProduct[index].image;
                   return ProductItem(
+                    id: listProduct[index].id,
                     name: listProduct[index].name,
                     price: listProduct[index].price,
                     description: listProduct[index].description,
                     imageUrl: imageUrl,
+                    navigationToOverview: (id) => navigationToOverview(id),
                   );
                 },
               ),

@@ -2,19 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ProductItem extends StatelessWidget {
+  final String id;
   final String name;
   final double price;
   final String description;
   final String imageUrl;
+  final Function navigationToOverview;
 
-  ProductItem({this.name, this.price, this.description, this.imageUrl});
+  ProductItem({
+    @required this.id,
+    @required this.name,
+    @required this.price,
+    @required this.description,
+    @required this.imageUrl,
+    @required this.navigationToOverview,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(3),
       child: InkWell(
-        onTap: () {},
+        onTap: () => navigationToOverview(id),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
           child: GridTile(

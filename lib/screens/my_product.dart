@@ -9,6 +9,7 @@ import '../widgets/drawer.dart';
 import '../widgets/form_product.dart';
 import './add_product.dart';
 import '../providers/my_product_provider.dart';
+import '../screens/overview_screen.dart';
 
 class MyProduct extends StatefulWidget {
   static const routeName = '/my_product';
@@ -70,9 +71,15 @@ class _MyProductState extends State<MyProduct> {
   }
 
 
-
+  /// Navigator edit product
   void _editProduct(String id){
     Navigator.of(context).pushNamed(EditProduct.routeName, arguments: id );
+  }
+
+
+  /// Navigatro overview product
+  void navigationToOverview(String id) {
+    Navigator.of(context).pushNamed(OverViewScreen.routeName, arguments: id);
   }
 
   @override
@@ -136,6 +143,7 @@ class _MyProductState extends State<MyProduct> {
                     title: _myProduct[index].name,
                     remove: _removeProduct,
                     edit: _editProduct,
+                    navigatorOverview: (id)=> navigationToOverview(id) ,
                   );
                 },
               ),
