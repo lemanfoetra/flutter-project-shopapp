@@ -49,10 +49,9 @@ class _FormProductState extends State<FormProduct> {
 
   /// Untuk menyimpan hasil add atau edit
   Future<void> submit(BuildContext context) async {
-
     // if null = add new , if not null = edit
     if (widget.productId == null) {
-      if (widget.imagePath != null) {
+      if (widget.imagePath == null) {
         _alert(context, 'Gambar tidak boleh kosong');
         return;
       }
