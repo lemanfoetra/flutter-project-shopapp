@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shopapp/screens/overview_screen.dart';
+import './screens/cart_screen.dart';
+import './screens/orders_screen.dart';
+import './screens/overview_screen.dart';
 import './screens/edit_product.dart';
 import './providers/my_product_provider.dart';
 import './screens/add_product.dart';
@@ -9,6 +11,7 @@ import './providers/product_provider.dart';
 import 'screens/home.dart';
 import './screens/login.dart';
 import 'package:provider/provider.dart';
+import './providers/cart_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,6 +30,10 @@ class MyApp extends StatelessWidget {
           create: null,
           update: (ctx, auth, myProduct) =>
               MyProductProvider(token: auth.token),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, CartProvider>(
+          create: null,
+          update: (ctx, auth, cartProvider) => CartProvider(token: auth.token),
         )
       ],
       child: Consumer<AuthProvider>(
@@ -37,12 +44,29 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
-            //'/': (ctx) => MyProduct(),
-            '/': (ctx) => auth.isAuth ? HomeScreens() : Login(),
+            '/': (ctx) {
+              if (auth.isAuth) {
+                return HomeScreens();
+              }
+              return FutureBuilder(
+                future: auth.tryLogin(),
+                builder: (ctx, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Scaffold( body: Center(child: CircularProgressIndicator(),));
+                  }else if(snapshot.hasError){
+                    return Center(child: Text(snapshot.error));
+                  }else{
+                    return Login();
+                  }
+                },
+              );
+            },
             MyProduct.routeName: (ctx) => MyProduct(),
             AddProduct.routeName: (ctx) => AddProduct(),
-            EditProduct.routeName : (ctx) => EditProduct(),
-            OverViewScreen.routeName : (ctx) => OverViewScreen(),
+            EditProduct.routeName: (ctx) => EditProduct(),
+            OverViewScreen.routeName: (ctx) => OverViewScreen(),
+            OrdersScreen.routeName: (ctx) => OrdersScreen(),
+            CartScreen.routeName: (ctx) => CartScreen(),
           },
         ),
       ),
