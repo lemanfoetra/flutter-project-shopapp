@@ -52,24 +52,35 @@ class MyApp extends StatelessWidget {
                 future: auth.tryLogin(),
                 builder: (ctx, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Scaffold( body: Center(child: CircularProgressIndicator(),));
-                  }else if(snapshot.hasError){
+                    return Scaffold(
+                        body: Center(
+                      child: CircularProgressIndicator(),
+                    ));
+                  } else if (snapshot.hasError) {
                     return Center(child: Text(snapshot.error));
-                  }else{
+                  } else {
                     return Login();
                   }
                 },
               );
             },
-            MyProduct.routeName: (ctx) => MyProduct(),
-            AddProduct.routeName: (ctx) => AddProduct(),
-            EditProduct.routeName: (ctx) => EditProduct(),
-            OverViewScreen.routeName: (ctx) => OverViewScreen(),
-            OrdersScreen.routeName: (ctx) => OrdersScreen(),
-            CartScreen.routeName: (ctx) => CartScreen(),
+            MyProduct.routeName: (ctx) => routeTo(auth.isAuth, MyProduct()),
+            AddProduct.routeName: (ctx) => routeTo(auth.isAuth, AddProduct()),
+            EditProduct.routeName: (ctx) => routeTo(auth.isAuth, EditProduct() ),
+            OverViewScreen.routeName: (ctx) => routeTo(auth.isAuth, OverViewScreen()  ),
+            OrdersScreen.routeName: (ctx) => routeTo(auth.isAuth,  OrdersScreen()),
+            CartScreen.routeName: (ctx) => routeTo(auth.isAuth, CartScreen()),
           },
         ),
       ),
     );
+  }
+
+  // pengecekan auth
+  Widget routeTo(bool isAuth, Widget className) {
+    if (isAuth) {
+      return className;
+    }
+    return Login();
   }
 }

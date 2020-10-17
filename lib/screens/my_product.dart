@@ -63,8 +63,6 @@ class _MyProductState extends State<MyProduct> {
   Future<void> _removeProduct(String id) async {
     var myProduct = Provider.of<MyProductProvider>(context, listen: false);
     await myProduct.removeProduct(id);
-    print('1 ${_myProduct.length}');
-    print('2 ${myProduct.myProduct.length}');
     setState(() {
       _myProduct = myProduct.myProduct;
     });
