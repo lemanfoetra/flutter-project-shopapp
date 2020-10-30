@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import './providers/orders_list_provider.dart';
+import './screens/ordersitem_screen.dart';
+import './providers/orders_provider.dart';
 import './screens/cart_screen.dart';
 import './screens/orders_screen.dart';
 import './screens/overview_screen.dart';
@@ -34,7 +37,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthProvider, CartProvider>(
           create: null,
           update: (ctx, auth, cartProvider) => CartProvider(token: auth.token),
-        )
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, OrdersProvider>(
+          create: null,
+          update: (ctx, auth, order) => OrdersProvider(token: auth.token),
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, OrdersListProvider>(
+          create: null,
+          update: (ctx, auth, orderList) => OrdersListProvider(token: auth.token),
+        ),
       ],
       child: Consumer<AuthProvider>(
         builder: (ctx, auth, _) => MaterialApp(
@@ -66,10 +77,14 @@ class MyApp extends StatelessWidget {
             },
             MyProduct.routeName: (ctx) => routeTo(auth.isAuth, MyProduct()),
             AddProduct.routeName: (ctx) => routeTo(auth.isAuth, AddProduct()),
-            EditProduct.routeName: (ctx) => routeTo(auth.isAuth, EditProduct() ),
-            OverViewScreen.routeName: (ctx) => routeTo(auth.isAuth, OverViewScreen()  ),
-            OrdersScreen.routeName: (ctx) => routeTo(auth.isAuth,  OrdersScreen()),
+            EditProduct.routeName: (ctx) => routeTo(auth.isAuth, EditProduct()),
+            OverViewScreen.routeName: (ctx) =>
+                routeTo(auth.isAuth, OverViewScreen()),
+            OrdersScreen.routeName: (ctx) =>
+                routeTo(auth.isAuth, OrdersScreen()),
             CartScreen.routeName: (ctx) => routeTo(auth.isAuth, CartScreen()),
+            OrdersScreenItem.routeName: (ctx) =>
+                routeTo(auth.isAuth, OrdersScreenItem()),
           },
         ),
       ),

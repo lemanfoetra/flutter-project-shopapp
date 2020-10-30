@@ -35,10 +35,10 @@ class ProductItem extends StatelessWidget {
                   width: 0.3,
                 ),
               ),
-              child: FadeInImage(
-                image: NetworkImage(imageUrl),
-                placeholder: AssetImage('assets/images/loading.gif'),
+              child: Image.network(
+                imageUrl,
                 fit: BoxFit.cover,
+                filterQuality: FilterQuality.low,
               ),
             ),
             footer: Container(
