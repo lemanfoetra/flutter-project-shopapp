@@ -121,16 +121,19 @@ class CartProvider with ChangeNotifier {
       if (responseStatus['status'] != 'success') {
         throw responseStatus['message'].toString();
       }
-      Cart _lastCart = _cart.firstWhere((data) => data.productsId == productId);
-      Cart newCart = Cart(
-        id: _lastCart.id,
-        status: _lastCart.status,
-        quantity: (_lastCart.quantity + quantity),
-        usersId: _lastCart.usersId,
-        productsId: _lastCart.productsId,
-      );
-      _cart[_cart.indexOf(_lastCart)] = newCart;
-      setNewQuantityProductCart(productId, newCart.quantity);
+      if (cart.length > 0) {
+        Cart _lastCart =
+            cart.firstWhere((data) => data.productsId == productId);
+        Cart newCart = Cart(
+          id: _lastCart.id,
+          status: _lastCart.status,
+          quantity: (_lastCart.quantity + quantity),
+          usersId: _lastCart.usersId,
+          productsId: _lastCart.productsId,
+        );
+        _cart[_cart.indexOf(_lastCart)] = newCart;
+        setNewQuantityProductCart(productId, newCart.quantity);
+      }
     }
     notifyListeners();
   }
@@ -202,9 +205,9 @@ class CartProvider with ChangeNotifier {
       headers: {'Accept': 'application/json', 'Authorization': "Bearer $token"},
     );
     var responseData = jsonDecode(response.body) as Map<String, dynamic>;
-    if(responseData['status'] == 'success'){
+    if (responseData['status'] == 'success') {
       _productOrders = [];
-    }else{
+    } else {
       throw 'Proses Gagal';
     }
     notifyListeners();
