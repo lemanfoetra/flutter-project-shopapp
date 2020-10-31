@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './screens/overview_detail_screen.dart';
 import './providers/orders_list_provider.dart';
 import './screens/ordersitem_screen.dart';
 import './providers/orders_provider.dart';
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<AuthProvider, OrdersListProvider>(
           create: null,
-          update: (ctx, auth, orderList) => OrdersListProvider(token: auth.token),
+          update: (ctx, auth, orderList) =>
+              OrdersListProvider(token: auth.token),
         ),
       ],
       child: Consumer<AuthProvider>(
@@ -55,36 +57,17 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
-            '/': (ctx) {
-              if (auth.isAuth) {
-                return HomeScreens();
-              }
-              return FutureBuilder(
-                future: auth.tryLogin(),
-                builder: (ctx, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Scaffold(
-                        body: Center(
-                      child: CircularProgressIndicator(),
-                    ));
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text(snapshot.error));
-                  } else {
-                    return Login();
-                  }
-                },
-              );
-            },
-            MyProduct.routeName: (ctx) => routeTo(auth.isAuth, MyProduct()),
-            AddProduct.routeName: (ctx) => routeTo(auth.isAuth, AddProduct()),
-            EditProduct.routeName: (ctx) => routeTo(auth.isAuth, EditProduct()),
-            OverViewScreen.routeName: (ctx) =>
-                routeTo(auth.isAuth, OverViewScreen()),
-            OrdersScreen.routeName: (ctx) =>
-                routeTo(auth.isAuth, OrdersScreen()),
-            CartScreen.routeName: (ctx) => routeTo(auth.isAuth, CartScreen()),
+            '/': (ctx)=> routeTo(auth, HomeScreens()),
+            MyProduct.routeName: (ctx) => routeTo(auth, MyProduct()),
+            AddProduct.routeName: (ctx) => routeTo(auth, AddProduct()),
+            EditProduct.routeName: (ctx) => routeTo(auth, EditProduct()),
+            OverViewScreen.routeName: (ctx) => routeTo(auth, OverViewScreen()),
+            OrdersScreen.routeName: (ctx) => routeTo(auth, OrdersScreen()),
+            CartScreen.routeName: (ctx) => routeTo(auth, CartScreen()),
             OrdersScreenItem.routeName: (ctx) =>
-                routeTo(auth.isAuth, OrdersScreenItem()),
+                routeTo(auth, OrdersScreenItem()),
+            OverViewDetailScreen.routeName: (ctx) =>
+                routeTo(auth, OverViewDetailScreen()),
           },
         ),
       ),
@@ -92,10 +75,25 @@ class MyApp extends StatelessWidget {
   }
 
   // pengecekan auth
-  Widget routeTo(bool isAuth, Widget className) {
-    if (isAuth) {
+  Widget routeTo(AuthProvider auth, Widget className) {
+    if (auth.isAuth) {
       return className;
     }
-    return Login();
+    return FutureBuilder(
+      future: auth.tryLogin(),
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(child: Text(snapshot.error));
+        } else {
+          return Login();
+        }
+      },
+    );
   }
 }

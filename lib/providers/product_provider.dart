@@ -116,10 +116,41 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-
   /// Mencari produk berdasarkan id
-  Product findById(String id){
+  Product findById(String id) {
     return _listProduct.firstWhere((product) => product.id == id);
+  }
+
+
+
+  /// Get Product from server with id
+  Future<Product> fetchProduct(String id) async {
+    final String url =
+        "http://shopapp.ardynsulaeman.com/public/api/product/get/$id";
+    final response = await http.get(
+      url,
+      headers: {'Accept': 'application/json', 'Authorization': "Bearer $token"},
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (responseData['data'] != null) {
+        Product _product;
+        responseData['data'].forEach(
+          (value) {
+            Map<String, dynamic> valueData = value;
+            // crate new Product data
+            _product = Product(
+              id: valueData['id'].toString(),
+              price: valueData['price'].toDouble(),
+              description: valueData['description'],
+              image: valueData['img_url'],
+              name: valueData['name'],
+            );
+          },
+        );
+        return _product;
+      }
+    }
+    return null;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shopapp/screens/overview_screen.dart';
+import '../screens/overview_detail_screen.dart';
 import '../models/product.dart';
 import '../widgets/order_item.dart';
 import '../providers/orders_provider.dart';
@@ -32,7 +32,7 @@ class _OrdersScreenItemState extends State<OrdersScreenItem> {
 
   /// navigate to detail product
   void openDetailProduct(String id, BuildContext context) {
-    Navigator.of(context).pushNamed(OverViewScreen.routeName, arguments: id);
+    Navigator.of(context).pushNamed(OverViewDetailScreen.routeName, arguments: id);
   }
 
   @override
