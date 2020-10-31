@@ -89,7 +89,7 @@ class _MyProductState extends State<MyProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Product'),
+        title: Text('Produk Saya'),
         actions: <Widget>[
           FlatButton(
             onPressed: () {

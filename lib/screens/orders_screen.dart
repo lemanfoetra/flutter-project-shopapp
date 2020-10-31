@@ -40,7 +40,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Orders'),
+        title: Text('Order Sukses'),
       ),
       drawer: AppDrawer(),
       body: Container(

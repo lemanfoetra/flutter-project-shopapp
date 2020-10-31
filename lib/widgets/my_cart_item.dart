@@ -127,7 +127,7 @@ class _MyCartItemState extends State<MyCartItem> {
                         width: 20,
                         height: 20,
                         decoration: BoxDecoration(
-                            color: Colors.lightBlue,
+                            color: Color(0xFFf5a25d),
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Text(

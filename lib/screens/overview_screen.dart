@@ -140,7 +140,7 @@ class _OverViewScreenState extends State<OverViewScreen> {
                   ],
                 ),
                 padding:
-                    EdgeInsets.only(top: 5, left: 10, right: 10, bottom: 5),
+                    EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
                 width: double.infinity,
                 child: Row(
                   children: <Widget>[
@@ -148,11 +148,14 @@ class _OverViewScreenState extends State<OverViewScreen> {
                       child: Container(),
                     ),
                     Container(
-                      child: FlatButton(
-                        padding: EdgeInsets.only(left: 30, right: 30),
-                        color: Colors.orange,
-                        textColor: Colors.white,
-                        onPressed: () {
+                      padding: EdgeInsets.only(
+                          top: 10, left: 20, right: 20, bottom: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border:
+                              Border.all(color: Color(0xFFf5a25d), width: 2)),
+                      child: InkWell(
+                        onTap: () {
                           submitCart(context, productId, 1);
                         },
                         child: isLoading
@@ -162,16 +165,15 @@ class _OverViewScreenState extends State<OverViewScreen> {
                                 child: Center(
                                   child: CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                      Color(0xFFfa7f72),
+                                    ),
                                   ),
                                 ),
                               )
                             : Text(
-                                '+ Cart',
+                                '+ Keranjang',
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontSize: 14, color: Color(0xFFfa7f72)),
                               ),
                       ),
                     )

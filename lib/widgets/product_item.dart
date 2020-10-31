@@ -49,6 +49,7 @@ class ProductItem extends StatelessWidget {
                   Container(
                     child: Text(
                       name,
+                      overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 12),
                     ),
@@ -56,7 +57,7 @@ class ProductItem extends StatelessWidget {
                   ),
                   Container(
                     child: Text(
-                      "Rp $price",
+                      "Rp ${price.toStringAsFixed(0)}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,

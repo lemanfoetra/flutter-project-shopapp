@@ -51,13 +51,14 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<AuthProvider>(
         builder: (ctx, auth, _) => MaterialApp(
-          title: 'Shopper',
+          title: 'Shop App',
           theme: ThemeData(
             primarySwatch: Colors.teal,
           ),
           initialRoute: '/',
           routes: {
             '/': (ctx)=> routeTo(auth, HomeScreens()),
+            
             MyProduct.routeName: (ctx) => routeTo(auth, MyProduct()),
             AddProduct.routeName: (ctx) => routeTo(auth, AddProduct()),
             EditProduct.routeName: (ctx) => routeTo(auth, EditProduct()),

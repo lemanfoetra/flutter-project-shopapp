@@ -31,10 +31,10 @@ class OrdersList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 5),
+                padding: EdgeInsets.only(left: 5, bottom: 3),
                 child: Icon(
                   FontAwesomeIcons.shoppingBag,
-                  color: Colors.teal,
+                  color: Color(0xFFfa7f72),
                 ),
               ),
               Expanded(

@@ -37,14 +37,13 @@ class _OrdersScreenItemState extends State<OrdersScreenItem> {
 
   @override
   Widget build(BuildContext context) {
-    print('build');
     // merupakan date yang diparsing dari orders_list
     final date = ModalRoute.of(context).settings.arguments as String;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Oders Tanggal ${this.dateReal(DateTime.parse(date))}',
+          'Order Tanggal ${this.dateReal(DateTime.parse(date))}',
           style: TextStyle(
             fontSize: 16,
           ),

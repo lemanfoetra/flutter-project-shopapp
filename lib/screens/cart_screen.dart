@@ -59,7 +59,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Carts'),
+        title: Text('Keranjang Saya'),
       ),
       drawer: AppDrawer(),
       body: Container(
@@ -109,7 +109,20 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget _prosesCart() {
     return Container(
-      height: 50,
+      height: 60,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 2,
+            offset: Offset(0, 2),
+          ),
+          BoxShadow(
+            color: Colors.white,
+            offset: Offset(0, 2),
+          )
+        ],
+      ),
       width: double.infinity,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,11 +134,11 @@ class _CartScreenState extends State<CartScreen> {
                   padding: const EdgeInsets.only(left: 10),
                   child: Text(
                     "Total",
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(
-                  width: 20,
+                  width: 25,
                   padding: EdgeInsets.only(left: 5),
                   child: Text(
                     'Rp',
@@ -134,7 +147,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 Consumer<CartProvider>(
                   builder: (ctx, cart, ch) => Text(
-                    cart.getTotalPrice.toString(),
+                    cart.getTotalPrice.toStringAsFixed(0).toString(),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -145,9 +158,26 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ),
           Container(
-            child: FlatButton(
-              onPressed: () => prosesCart(),
-              child: Text('Proses Order'),
+            padding: EdgeInsets.only(top: 3, right: 10),
+            child: InkWell(
+              onTap: () => prosesCart(),
+              child: Container(
+                padding:
+                    EdgeInsets.only(top: 10, left: 20, bottom: 10, right: 20),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xFFf5a25d),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(5)),
+                child: Text(
+                  'Proses',
+                  style: TextStyle(
+                    color: Color(0xFFfa7f72),
+                    fontSize: 14,
+                  ),
+                ),
+              ),
             ),
           )
         ],

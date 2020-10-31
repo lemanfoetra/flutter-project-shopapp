@@ -63,7 +63,7 @@ class _HomeScreensState extends State<HomeScreens> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Shopper'),
+        title: Text('Shop App'),
       ),
       drawer: AppDrawer(),
       body: _isFirstLoaded
