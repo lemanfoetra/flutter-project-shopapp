@@ -37,17 +37,13 @@ class MyProductItem extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
-              child: FadeInImage(
-                image: NetworkImage(image),
-                placeholder: AssetImage('assets/images/picture.png'),
+              child: Image.network(
+                image,
                 fit: BoxFit.cover,
+                filterQuality: FilterQuality.low,
               ),
             ),
             header: Container(
-              // padding: EdgeInsets.only(
-              //   top: 7,
-              //   right: 3,
-              // ),
               width: double.infinity,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,

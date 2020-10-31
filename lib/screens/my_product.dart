@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shopapp/models/product.dart';
-import 'package:shopapp/screens/edit_product.dart';
+import '../models/product.dart';
+import '../screens/edit_product.dart';
 import '../widgets/my_product_item.dart';
 import '../widgets/drawer.dart';
-import '../widgets/form_product.dart';
 import './add_product.dart';
 import '../providers/my_product_provider.dart';
-import '../screens/overview_screen.dart';
+import '../screens/overview_detail_screen.dart';
 
 class MyProduct extends StatefulWidget {
   static const routeName = '/my_product';
@@ -30,6 +29,12 @@ class _MyProductState extends State<MyProduct> {
       load();
     }
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose(){
+    _refreshController.dispose();
+    super.dispose();
   }
 
   /// load my product
@@ -77,7 +82,7 @@ class _MyProductState extends State<MyProduct> {
 
   /// Navigatro overview product
   void navigationToOverview(String id) {
-    Navigator.of(context).pushNamed(OverViewScreen.routeName, arguments: id);
+    Navigator.of(context).pushNamed(OverViewDetailScreen.routeName, arguments: id);
   }
 
   @override
