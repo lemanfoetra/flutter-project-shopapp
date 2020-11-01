@@ -17,7 +17,7 @@ class OrdersList extends StatelessWidget {
 
   /// mengubah date ke bentuk string
   String toDateString(DateTime date){
-    final DateFormat formater = DateFormat('y-M-d');
+    final DateFormat formater = DateFormat('yyyy-MM-dd');
     return formater.format(date);
   }
 

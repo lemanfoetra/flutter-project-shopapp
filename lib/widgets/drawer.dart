@@ -53,7 +53,7 @@ class AppDrawer extends StatelessWidget {
                   color: Color(0xFFfa7f72),
                   size: 20,
                 ),
-                title: Text('Keranjang Saya'),
+                title: Text('Keranjang'),
                 onTap: () {
                   Navigator.of(context)
                       .pushReplacementNamed(CartScreen.routeName);
